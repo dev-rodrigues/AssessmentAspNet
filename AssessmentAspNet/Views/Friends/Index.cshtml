@@ -1,7 +1,7 @@
-﻿@model AssessmentAspNet.Models.FriendViewModel
+﻿@model IEnumerable<AssessmentAspNet.Models.FriendViewModel>
 
 @{
-    Layout = null;
+    ViewBag.Title = "Index";
 }
 
 <!DOCTYPE html>
@@ -12,39 +12,45 @@
     <title>Index</title>
 </head>
 <body>
-    <div>
-        <h4>FriendViewModel</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.FristName)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.FristName)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.LastName)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.LastName)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.BirtDate)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.BirtDate)
-            </dd>
-    
-        </dl>
-    </div>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(Model => Model.Id)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(Model => Model.FristName)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(Model => Model.LastName)
+            </th>
+        </tr>
+
+        @foreach (var friend in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => friend.Id)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => friend.FristName)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => friend.LastName)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = friend.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = friend.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = friend.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+
 </body>
 </html>
