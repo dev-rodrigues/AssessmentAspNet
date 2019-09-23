@@ -1,4 +1,5 @@
 ﻿using AssessmentAspNet.Domain;
+using AssessmentAspNet.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,8 +9,11 @@ using System.Web;
 
 namespace AssessmentAspNet.Repository {
     public class FriendsRepository {
+
+        private static string ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\rodri\source\repos\AssessmentAspNet\AssessmentAspNet\App_Data\Assessment.mdf;Integrated Security=True";
+
         public IEnumerable<Friends> GetAllFriends() {
-            var ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\rodri\source\repos\AssessmentAspNet\AssessmentAspNet\App_Data\Assessment.mdf;Integrated Security=True";
+
             using (var connection = new SqlConnection(ConnectionString)) {
                 var sql = "SELECT *FROM Friends";
                 var selectCommand = new SqlCommand(sql, connection);
@@ -33,6 +37,48 @@ namespace AssessmentAspNet.Repository {
                     connection.Close();
                 }
                 return friends;
+            }
+        }
+
+        public FriendViewModel GetFriendById(int IdFriend) {
+
+            using (SqlConnection connection = new SqlConnection(ConnectionString)) {
+                var sql = $" SELECT *FROM Friends AS f" +
+                          $" WHERE  f.Id = {IdFriend}";
+
+                SqlCommand selectCommand = new SqlCommand(sql, connection);
+
+                var fd = new FriendViewModel();
+
+                try {
+                    connection.Open();
+
+                    using (var reader = selectCommand.ExecuteReader(CommandBehavior.CloseConnection)) {
+                        while(reader.Read()) {
+                            fd.Id = (int)reader["Id"];
+                            fd.FristName = reader["FristName"].ToString();
+                            fd.LastName = reader["LastName"].ToString();
+                            fd.BirthDate = (DateTime)reader["BirthDate"];
+                        }
+                    }
+                } finally {
+                    connection.Close();
+                }                
+                return fd;
+            }
+        }
+
+
+
+        public int InsertFriend(string FristName, string LastName, DateTime BirthDate) {
+            using (var connection = new SqlConnection(ConnectionString)) {
+                connection.Open();
+                var sql = "INSERT INTO Friends (FristName, LastName, BirthDate) VALUES (@FristName, @LastName, @BirthDate)";
+                SqlCommand selectCommand = new SqlCommand(sql, connection);
+                selectCommand.Parameters.AddWithValue("@FristName", FristName);
+                selectCommand.Parameters.AddWithValue("@LastName", LastName);
+                selectCommand.Parameters.AddWithValue("@BirthDate", BirthDate);
+                return selectCommand.ExecuteNonQuery();
             }
         }
     }

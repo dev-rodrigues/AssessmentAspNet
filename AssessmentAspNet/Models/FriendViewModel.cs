@@ -8,6 +8,6 @@ namespace AssessmentAspNet.Models {
         public int Id { get; set; }
         public string FristName { get; set; }
         public string LastName { get; set; }
-        public DateTime BirtDate { get; set; }
+        public DateTime BirthDate { get; set; }
     }
 }

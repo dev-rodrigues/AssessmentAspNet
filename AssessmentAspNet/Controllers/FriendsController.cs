@@ -2,13 +2,15 @@
 using AssessmentAspNet.Repository;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using AssessmentAspNet.Models;
 
 namespace AssessmentAspNet.Controllers {
     public class FriendsController : Controller {
-        // GET: Friends
+
         public ActionResult Index() {
             var repository = new FriendsRepository();
             var friends = repository.GetAllFriends();
@@ -18,50 +20,51 @@ namespace AssessmentAspNet.Controllers {
                     Id = a.Id,
                     FristName = a.FristName,
                     LastName = a.LastName,
-                    BirtDate = a.BirthDate
+                    BirthDate = a.BirthDate
                 }));
         }
 
-        // GET: Friends/Details/5
         public ActionResult Details(int id) {
             return View();
         }
 
-        // GET: Friends/Create
         public ActionResult Create() {
             return View();
         }
 
-        // POST: Friends/Create
         [HttpPost]
         public ActionResult Create(FormCollection collection) {
-            try {
-                // TODO: Add insert logic here
+            var FristName = collection["FristName"];
+            var LastName = collection["LastName"];
+            var BirthDate = collection["BirthDate"];
+            var date = DateTime.Parse(BirthDate);
 
+            try {
+                var repository = new FriendsRepository();
+                repository.InsertFriend(FristName, LastName, date);
                 return RedirectToAction("Index");
-            } catch {
+            } catch (Exception e) {
+                Console.WriteLine(e.Message);
                 return View();
             }
         }
 
-        // GET: Friends/Edit/5
         public ActionResult Edit(int id) {
-            return View();
+            var repository = new FriendsRepository();
+            FriendViewModel fv = repository.GetFriendById(id);
+            return View(fv);
         }
 
-        // POST: Friends/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection) {
             try {
-                // TODO: Add update logic here
-
                 return RedirectToAction("Index");
+
             } catch {
                 return View();
             }
         }
 
-        // GET: Friends/Delete/5
         public ActionResult Delete(int id) {
             return View();
         }

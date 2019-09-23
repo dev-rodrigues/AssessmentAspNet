@@ -170,7 +170,9 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Friends\Create.cshtml" />
     <Content Include="Views\Friends\Index.cshtml" />
+    <Content Include="Views\Friends\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
