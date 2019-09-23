@@ -11,6 +11,7 @@ using AssessmentAspNet.Models;
 namespace AssessmentAspNet.Controllers {
     public class FriendsController : Controller {
 
+        // ordenar lista
         public ActionResult Index() {
             var repository = new FriendsRepository();
             var friends = repository.GetAllFriends();
@@ -57,10 +58,19 @@ namespace AssessmentAspNet.Controllers {
 
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection) {
+            var repository = new FriendsRepository();
             try {
+                FriendViewModel fvm = new FriendViewModel();
+                
+                fvm.Id = Int32.Parse(collection["Id"]);
+                fvm.FristName = collection["FristName"];
+                fvm.LastName = collection["LastName"];
+                fvm.BirthDate = DateTime.Parse(collection["BirthDate"]);
+                repository.UpdateFriend(fvm);
                 return RedirectToAction("Index");
 
-            } catch {
+            } catch (Exception e){
+                Console.WriteLine(e.Message);
                 return View();
             }
         }

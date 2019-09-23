@@ -54,7 +54,7 @@ namespace AssessmentAspNet.Repository {
                     connection.Open();
 
                     using (var reader = selectCommand.ExecuteReader(CommandBehavior.CloseConnection)) {
-                        while(reader.Read()) {
+                        while (reader.Read()) {
                             fd.Id = (int)reader["Id"];
                             fd.FristName = reader["FristName"].ToString();
                             fd.LastName = reader["LastName"].ToString();
@@ -63,12 +63,10 @@ namespace AssessmentAspNet.Repository {
                     }
                 } finally {
                     connection.Close();
-                }                
+                }
                 return fd;
             }
         }
-
-
 
         public int InsertFriend(string FristName, string LastName, DateTime BirthDate) {
             using (var connection = new SqlConnection(ConnectionString)) {
@@ -78,6 +76,22 @@ namespace AssessmentAspNet.Repository {
                 selectCommand.Parameters.AddWithValue("@FristName", FristName);
                 selectCommand.Parameters.AddWithValue("@LastName", LastName);
                 selectCommand.Parameters.AddWithValue("@BirthDate", BirthDate);
+                return selectCommand.ExecuteNonQuery();
+            }
+        }
+
+        public int UpdateFriend(FriendViewModel FriendUpdated) {            
+            using (var connection = new SqlConnection(ConnectionString)) {
+                connection.Open();
+                var sql = "UPDATE Friends SET " +
+                          "FristName = @FristName, " +
+                          "LastName = @LastName, " +
+                          "BirthDate = @BirthDate " +
+                          $"WHERE Id = {FriendUpdated.Id}";
+                SqlCommand selectCommand = new SqlCommand(sql, connection);
+                selectCommand.Parameters.AddWithValue("@FristName", FriendUpdated.FristName);
+                selectCommand.Parameters.AddWithValue("@LastName", FriendUpdated.LastName);
+                selectCommand.Parameters.AddWithValue("@BirthDate", FriendUpdated.BirthDate);
                 return selectCommand.ExecuteNonQuery();
             }
         }

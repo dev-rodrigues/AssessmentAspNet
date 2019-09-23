@@ -13,6 +13,21 @@
 </head>
 <body>
 
+    <br />
+    <br />
+
+    <p>
+        @Html.ActionLink("Adicionar pessoa", "Create")
+    </p>
+    <p>
+        @Html.ActionLink("Pesquisar pessoas", "Buscar")
+    </p>
+
+    <br />
+    <br />
+
+    <h1>Lista Ordenada</h1>
+
     <table class="table">
         <tr>
             <th>
@@ -26,6 +41,11 @@
             <th>
                 @Html.DisplayNameFor(Model => Model.LastName)
             </th>
+
+            <th>
+                Nascimento
+            </th>
+
         </tr>
 
         @foreach (var friend in Model) {
@@ -40,6 +60,10 @@
 
                 <td>
                     @Html.DisplayFor(modelItem => friend.LastName)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => friend.BirthDate)
                 </td>
 
                 <td>
