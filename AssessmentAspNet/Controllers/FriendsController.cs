@@ -76,10 +76,10 @@ namespace AssessmentAspNet.Controllers {
         }
 
         public ActionResult Delete(int id) {
-            return View();
+            var repository = new FriendsRepository();
+            return View(repository.GetFriendById(id));
         }
 
-        // POST: Friends/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection) {
             try {

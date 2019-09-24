@@ -10,12 +10,14 @@ using System.Web;
 namespace AssessmentAspNet.Repository {
     public class FriendsRepository {
 
-        private static string ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\rodri\source\repos\AssessmentAspNet\AssessmentAspNet\App_Data\Assessment.mdf;Integrated Security=True";
+        private static string ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=H:\DESENVOLVIMENTO\workspace\ASP\AssessmentAspNet\AssessmentAspNet\App_Data\Assessment.mdf;Integrated Security=True";
+        //private static string ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\rodri\source\repos\AssessmentAspNet\AssessmentAspNet\App_Data\Assessment.mdf;Integrated Security=True";
 
         public IEnumerable<Friends> GetAllFriends() {
 
             using (var connection = new SqlConnection(ConnectionString)) {
-                var sql = "SELECT *FROM Friends";
+                var sql = "SELECT *FROM Friends F order by Month(BirthDate), Day(BirthDate) DESC";
+                   
                 var selectCommand = new SqlCommand(sql, connection);
 
                 var friends = new List<Friends>();
@@ -95,5 +97,7 @@ namespace AssessmentAspNet.Repository {
                 return selectCommand.ExecuteNonQuery();
             }
         }
+
+
     }
 }

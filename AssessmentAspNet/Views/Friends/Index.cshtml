@@ -48,7 +48,8 @@
 
         </tr>
 
-        @foreach (var friend in Model) {
+        @foreach (var friend in Model)
+        {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => friend.Id)
@@ -72,6 +73,67 @@
                     @Html.ActionLink("Delete", "Delete", new { id = friend.Id })
                 </td>
             </tr>
+        }
+
+    </table>
+
+    <br />
+    <br />
+
+    <h1>Aniversariantes do dia</h1>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(Model => Model.Id)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(Model => Model.FristName)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(Model => Model.LastName)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(Model => Model.BirthDate)
+            </th>
+
+        </tr>
+
+        @foreach (var friend in Model)
+        {
+
+            if (friend.BirthDate.Day == DateTime.Now.Day && friend.BirthDate.Month == DateTime.Now.Month)
+            {
+
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => friend.Id)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => friend.FristName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => friend.LastName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => friend.BirthDate)
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = friend.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = friend.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = friend.Id })
+                    </td>
+                </tr>
+            }
+
         }
 
     </table>
