@@ -83,8 +83,8 @@ namespace AssessmentAspNet.Controllers {
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection) {
             try {
-                // TODO: Add delete logic here
-
+                var repository = new FriendsRepository();
+                repository.DeleteFriend(id);
                 return RedirectToAction("Index");
             } catch {
                 return View();
