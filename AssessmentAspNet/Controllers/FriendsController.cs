@@ -6,7 +6,6 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using AssessmentAspNet.Models;
 
 namespace AssessmentAspNet.Controllers {
     public class FriendsController : Controller {
@@ -26,7 +25,9 @@ namespace AssessmentAspNet.Controllers {
         }
 
         public ActionResult Details(int id) {
-            return View();
+            var repo = new FriendsRepository();
+            var fv = repo.GetFriendById(id);
+            return View(fv);
         }
 
         public ActionResult Create() {
@@ -61,7 +62,7 @@ namespace AssessmentAspNet.Controllers {
             var repository = new FriendsRepository();
             try {
                 FriendViewModel fvm = new FriendViewModel();
-                
+
                 fvm.Id = Int32.Parse(collection["Id"]);
                 fvm.FristName = collection["FristName"];
                 fvm.LastName = collection["LastName"];
@@ -69,7 +70,7 @@ namespace AssessmentAspNet.Controllers {
                 repository.UpdateFriend(fvm);
                 return RedirectToAction("Index");
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 Console.WriteLine(e.Message);
                 return View();
             }
@@ -86,6 +87,23 @@ namespace AssessmentAspNet.Controllers {
                 var repository = new FriendsRepository();
                 repository.DeleteFriend(id);
                 return RedirectToAction("Index");
+            } catch {
+                return View();
+            }
+        }
+
+        public ActionResult Buscar() {
+            string pesquisar = "";
+            var repo = new FriendsRepository();
+            return View(repo.GetFriendByString(pesquisar));
+        }
+
+        [HttpPost]
+        public ActionResult Buscar(string pesquisa) {
+            try {
+                var repo = new FriendsRepository();
+
+                return View(repo.GetFriendByString(pesquisa));
             } catch {
                 return View();
             }

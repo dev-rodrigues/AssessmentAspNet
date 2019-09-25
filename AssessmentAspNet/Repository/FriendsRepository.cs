@@ -7,33 +7,33 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
-namespace AssessmentAspNet.Repository
-{
-    public class FriendsRepository
-    {
+namespace AssessmentAspNet.Repository {
+    public class FriendsRepository {
 
-        private static string ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=H:\DESENVOLVIMENTO\workspace\ASP\AssessmentAspNet\AssessmentAspNet\App_Data\Assessment.mdf;Integrated Security=True";
+        //private static string ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=H:\DESENVOLVIMENTO\workspace\ASP\AssessmentAspNet\AssessmentAspNet\App_Data\Assessment.mdf;Integrated Security=True";
         //private static string ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\rodri\source\repos\AssessmentAspNet\AssessmentAspNet\App_Data\Assessment.mdf;Integrated Security=True";
+        private static string ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\DESENVOLVIMENTO\workspace\ASP\AssessmentAspNet\AssessmentAspNet\App_Data\Assessment.mdf;Integrated Security=True";
 
-        public IEnumerable<Friends> GetAllFriends()
-        {
+        public IEnumerable<Friends> GetAllFriends() {
 
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                var sql = "SELECT *FROM Friends F order by Month(BirthDate), Day(BirthDate) DESC";
+            using (var connection = new SqlConnection(ConnectionString)) {
+                var sql =   "select* " +
+                            "from            Friends as f " +
+                            "where(1 = 1) " +
+                            "        and MONTH(f.BirthDate) >= MONTH(GETDATE()) " +
+                            "        and DAY(f.BirthDate) <= DAY(GETDATE()) " +
+                            " order by          MONTH(f.BirthDate) " +
+                            "               ,	DAY(f.BirthDate) ASC ";
 
                 var selectCommand = new SqlCommand(sql, connection);
 
                 var friends = new List<Friends>();
 
-                try
-                {
+                try {
                     connection.Open();
 
-                    using (var reader = selectCommand.ExecuteReader(CommandBehavior.CloseConnection))
-                    {
-                        while (reader.Read())
-                        {
+                    using (var reader = selectCommand.ExecuteReader(CommandBehavior.CloseConnection)) {
+                        while (reader.Read()) {
                             var friend = new Friends();
                             friend.Id = (int)reader["Id"];
                             friend.FristName = reader["FristName"].ToString();
@@ -42,20 +42,16 @@ namespace AssessmentAspNet.Repository
                             friends.Add(friend);
                         }
                     }
-                }
-                finally
-                {
+                } finally {
                     connection.Close();
                 }
                 return friends;
             }
         }
 
-        public FriendViewModel GetFriendById(int IdFriend)
-        {
+        public FriendViewModel GetFriendById(int IdFriend) {
 
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
-            {
+            using (SqlConnection connection = new SqlConnection(ConnectionString)) {
                 var sql = $" SELECT *FROM Friends AS f" +
                           $" WHERE  f.Id = {IdFriend}";
 
@@ -63,33 +59,56 @@ namespace AssessmentAspNet.Repository
 
                 var fd = new FriendViewModel();
 
-                try
-                {
+                try {
                     connection.Open();
 
-                    using (var reader = selectCommand.ExecuteReader(CommandBehavior.CloseConnection))
-                    {
-                        while (reader.Read())
-                        {
+                    using (var reader = selectCommand.ExecuteReader(CommandBehavior.CloseConnection)) {
+                        while (reader.Read()) {
                             fd.Id = (int)reader["Id"];
                             fd.FristName = reader["FristName"].ToString();
                             fd.LastName = reader["LastName"].ToString();
                             fd.BirthDate = (DateTime)reader["BirthDate"];
                         }
                     }
-                }
-                finally
-                {
+                } finally {
                     connection.Close();
                 }
                 return fd;
             }
         }
 
-        public int InsertFriend(string FristName, string LastName, DateTime BirthDate)
-        {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
+        public IEnumerable<FriendViewModel> GetFriendByString(string part) {
+            using (SqlConnection connection = new SqlConnection(ConnectionString)) {
+                var sql = $" SELECT *FROM Friends AS f              " +
+                          $" WHERE  f.FristName like '%{part}%'     " +
+                          $" or f.LastName like '%{part}%'          ";
+
+                SqlCommand selectCommand = new SqlCommand(sql, connection);
+
+                var list = new List<FriendViewModel>();
+
+                try {
+                    connection.Open();
+
+                    using (var reader = selectCommand.ExecuteReader(CommandBehavior.CloseConnection)) {
+                        while (reader.Read()) {
+                            var nFriend = new FriendViewModel();
+                            nFriend.Id = (int)reader["Id"];
+                            nFriend.FristName = reader["FristName"].ToString();
+                            nFriend.LastName = reader["LastName"].ToString();
+                            nFriend.BirthDate = (DateTime)reader["BirthDate"];
+                            list.Add(nFriend);
+                        }
+                    }
+                } finally {
+                    connection.Close();
+                }
+                return list;
+            }
+        }
+
+        public int InsertFriend(string FristName, string LastName, DateTime BirthDate) {
+            using (var connection = new SqlConnection(ConnectionString)) {
                 connection.Open();
                 var sql = "INSERT INTO Friends (FristName, LastName, BirthDate) VALUES (@FristName, @LastName, @BirthDate)";
                 SqlCommand selectCommand = new SqlCommand(sql, connection);
@@ -100,10 +119,8 @@ namespace AssessmentAspNet.Repository
             }
         }
 
-        public int UpdateFriend(FriendViewModel FriendUpdated)
-        {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
+        public int UpdateFriend(FriendViewModel FriendUpdated) {
+            using (var connection = new SqlConnection(ConnectionString)) {
                 connection.Open();
                 var sql = "UPDATE Friends SET " +
                           "FristName = @FristName, " +
